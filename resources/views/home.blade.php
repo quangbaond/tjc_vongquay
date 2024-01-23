@@ -34,6 +34,9 @@
                     </div>
                     {{-- end div card header --}}
                     {{-- div card body --}}
+                    @if($event->count() == 0)
+                    Không tìm thấy sự kiện nào
+                    @else
                     <div class="card-body">
                         {{-- div table --}}
                         <table class="table table-bordered table-hover table-striped">
@@ -63,6 +66,7 @@
                     <div class="card-footer">
                         {!! $events->withQueryString()->links('vendor.pagination.bootstrap-5') !!}
                     </div>
+                    @endif
                     {{-- end div card body --}}
                 </div>
             </div>
