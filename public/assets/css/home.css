@@ -1,0 +1,9 @@
+.about_image img:hover {
+    transform: scale(1.04);
+    transition: 0.5s;
+    cursor: pointer;
+}
+.new_image{
+    transform: scale(1);
+}
+
