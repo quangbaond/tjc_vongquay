@@ -34,7 +34,7 @@
                     </div>
                     {{-- end div card header --}}
                     {{-- div card body --}}
-                    @if($event->count() == 0)
+                    @if($events->count() == 0)
                     Không tìm thấy sự kiện nào
                     @else
                     <div class="card-body">
