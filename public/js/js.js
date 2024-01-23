@@ -1,6 +1,5 @@
 window.onload = function () {
-    console.log(segmentsData);
-    // blockDevTools()
+    blockDevTools()
     var datatable = $('#dataTable').DataTable({
         "processing": true,
         "serverSide": true,

@@ -35,7 +35,7 @@ background-repeat: no-repeat;">
         <div></div>
         <div></div>
     </div>
-    <div class="container d-none">
+    <div class="container-fluid">
         <div class="row">
             @if($event->setting->rule_title)
             <div class="col-12 col-md-12 mt-5">
