@@ -100,4 +100,35 @@ class PrizeWheelController extends ApiController
             $event ? Response::HTTP_OK : Response::HTTP_NOT_FOUND
         );
     }
+
+    public function getUser(Request $request)
+    {
+        if ($request->has('event_id') && $request->get('event_id')) {
+            $user = $this->prizeWheelUserService->search([
+                'keyword' => $request->has('search') && $request->get('search')['value'] ? $request->get('search')['value'] : null,
+                'event_id' => $request->get('event_id'),
+            ], ['phone'])->get();
+
+            // if($request->has('search') && $request->get('search')['value']) {
+            //     $user = $this->prizeWheelUserService->search([
+            //         'keyword' => $request->has('search') && $request->get('search')['value'] ? $request->get('search')['value'] : null,
+            //         'event_id' => $request->get('event_id'),
+            //     ], ['phone']);
+            // }
+
+            return $this->sendSuccess(
+                $user,
+                'User retrieved successfully.',
+                Response::HTTP_OK
+            );
+        }
+
+        $user = $this->prizeWheelUserService->all();
+
+        return $this->sendSuccess(
+            $user,
+            'User retrieved successfully.',
+            Response::HTTP_OK
+        );
+    }
 }

@@ -3,6 +3,36 @@
     margin: 0;
 }
 
+#btn-spin {
+    width: 150px;
+}
+
+#vqRight {
+    position: relative;
+    width: 500px;
+    height: 500px;
+}
+
+#quayBtn {
+    position: absolute;
+    top: -5%;
+    left: 50%;
+    transform: translateX(-50%);
+    cursor: pointer;
+}
+
+#quayBtn img {
+    max-width: 150px;
+}
+
+#dvNutTrungTam {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+}
+
 .lds-spinner {
     color: official;
     position: absolute;

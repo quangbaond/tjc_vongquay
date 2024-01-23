@@ -81,7 +81,7 @@ class BaseService
     /**
      * @throws ExceptionAlias
      */
-    public function pagination(array $requester = [], array $columnCanSearchKeyword = ['*'], int $limit = PAGE_SIZE): array|\Illuminate\Database\Eloquent\Collection|\Illuminate\Pagination\LengthAwarePaginator
+    public function pagination(array $requester = [], array $columnCanSearchKeyword = ['*'], int $limit = 20): array|\Illuminate\Database\Eloquent\Collection|\Illuminate\Pagination\LengthAwarePaginator
     {
         return $this->repository->pagination(limit: $limit, requester: $requester, columnCanSearchKeyword: $columnCanSearchKeyword);
     }
@@ -130,4 +130,8 @@ class BaseService
         return $this->repository->findBySlug($slug, $with);
     }
 
+    public function search(array $requester = [], array $columnCanSearchKeyword = ['*'])
+    {
+        return $this->repository->search($requester, $columnCanSearchKeyword);
+    }
 }

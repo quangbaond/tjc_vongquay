@@ -23,11 +23,11 @@ class PrizeWheelEvent extends Model
 
     public function prizes()
     {
-        return $this->hasMany(PrizeWheel::class);
+        return $this->hasMany(PrizeWheel::class, 'event_id');
     }
 
     public function users()
     {
-        return $this->hasMany(PrizeWheelUser::class);
+        return $this->hasMany(PrizeWheelUser::class, 'event_id');
     }
 }

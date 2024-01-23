@@ -1,4 +1,93 @@
 window.onload = function () {
+    console.log(segmentsData);
+    // segmentsData.map((item, index) => {
+    //     return {
+    //         item.name
+    //     }
+    // })
+    var datatable = $('#dataTable').DataTable({
+        "processing": true,
+        "serverSide": true,
+        // "sPaginationType": "full_numbers",
+        //show entries
+        lengthMenu: [
+            [10, 25, 50, 100, 200, 500, 1000, -1],
+            [10, 25, 50, 100, 200, 500, 1000, "Tất cả"]
+        ],
+
+        // fix language
+
+        language: {
+            "decimal": "",
+            "emptyTable": "Không có dữ liệu",
+            "info": "Hiển thị từ _START_ đến _END_ trong _TOTAL_ kết quả",
+            "infoEmpty": "Hiển thị 0 đến 0 trong 0 kết quả",
+            "infoFiltered": "(Lọc từ _MAX_ kết quả)",
+            "infoPostFix": "",
+            "thousands": ",",
+            "lengthMenu": "Hiển thị _MENU_ kết quả",
+            "loadingRecords": "Đang tải...",
+            "processing": "Đang xử lý...",
+            "search": "Tìm kiếm:",
+            "zeroRecords": "Không tìm thấy kết quả",
+            "paginate": {
+                "first": "Đầu",
+                "last": "Cuối",
+                "next": "Sau",
+                "previous": "Trước"
+            },
+            "aria": {
+                "sortAscending": ": Sắp xếp tăng dần",
+                "sortDescending": ": Sắp xếp giảm dần"
+            }
+        },
+
+        ajax: {
+            url: API_URL + '/prize-user',
+            type: 'GET',
+            dataType: 'json',
+            dataSrc: 'data',
+            data: {
+                event_id: event.id
+            }
+        },
+
+        columns: [
+            {
+                data: 'phone',
+                render: function (data, type, row, meta) {
+                    return limitNumberPhone(data)
+                }
+            },
+            // { data: 'address' },
+            { data: 'prize' },
+            {
+                data: 'created_at',
+                render: function (data, type, row, meta) {
+                    return moment(data).format('DD-MM-YYYY HH:mm:ss')
+                }
+            },
+        ],
+
+        // columns: [
+        //     { data: 'phone' },
+        //     { data: 'address' },
+        //     { data: 'prize' },
+        //     { data: 'created_at' },
+        // ],
+    })
+    function limitNumberPhone(phone) {
+        return phone.slice(0, 6) + '****'
+    }
+    setTimeout(() => {
+        $('.lds-spinner').toggleClass('d-none')
+        $('.container').toggleClass('d-none')
+
+        createWheel(segmentsData)
+    }, 1000);
+
+    let isStartSpin = "False";
+
     // check if open dev tool
     function blockDevTools() {
         window.addEventListener('DOMContentLoaded', function () {
@@ -41,60 +130,13 @@ window.onload = function () {
     var theWheel = null
     var user = null
 
-    function getEvent() {
-        $.ajax({
-            url: API_URL + '/prize-event',
-            type: 'GET',
-            dataType: 'json',
-            async: false,
-            success: function (data) {
-                if (data.data.is_active === 0) {
-                    Swal.fire({
-                        title: 'Thông báo',
-                        text: 'Sự kiện đã kết thúc',
-                        icon: 'warning',
-                        confirmButtonText: 'OK'
-                    })
-                    return
-                }
-                getGiaiThuong()
-            }
-        })
-    }
-
-    function getGiaiThuong() {
-        $.ajax({
-            url: API_URL + '/prize-wheel',
-            type: 'GET',
-            dataType: 'json',
-            async: false,
-            success: function (data) {
-                $('.lds-spinner').toggleClass('d-none')
-                $('.container').toggleClass('d-none')
-                responsiveCanvas()
-                createWheel(data.data)
-
-            }
-        })
-    }
-
-    const responsiveCanvas = function () {
-        var canvas = document.getElementById("canvas");
-        var parent = document.getElementById("canvasCt");
-        var width = parent.offsetWidth;
-        var height = parent.offsetHeight;
-        canvas.style.width = width + "px";
-        canvas.style.height = height + "px";
-        canvas.width = width;
-        canvas.height = height;
-    }
-    audio = new Audio('./Mp3s/tick.mp3');  // Create audio object and load desired file.
-    audioWinning = new Audio('./Mp3s/fanfare-winner.mp3');
-    audioFound = new Audio('./Mp3s/foundMa.mp3');
-    audioClick = new Audio('./Mp3s/clickingsound.mp3');
-    audioCorrect = new Audio('./Mp3s/correct.mp3');
-    audioKhongDung = new Audio('./Mp3s/MaKhongDung.mp3');
-    audioGameOver = new Audio('./Mp3s/Game_Over.mp3');
+    audio = new Audio('/Mp3s/tick.mp3');  // Create audio object and load desired file.
+    audioWinning = new Audio('/Mp3s/fanfare-winner.mp3');
+    audioFound = new Audio('/Mp3s/foundMa.mp3');
+    audioClick = new Audio('/Mp3s/clickingsound.mp3');
+    audioCorrect = new Audio('/Mp3s/correct.mp3');
+    audioKhongDung = new Audio('/Mp3s/MaKhongDung.mp3');
+    audioGameOver = new Audio('/Mp3s/Game_Over.mp3');
 
     function alertPrize(indicatedSegment) {
         // alert(indicatedSegment)
@@ -157,6 +199,7 @@ window.onload = function () {
         }
 
         user.prize = indicatedSegment.text
+        user.event_id = event.id
         $.ajax({
             url: API_URL + '/prize-wheel',
             type: 'POST',
@@ -176,26 +219,26 @@ window.onload = function () {
     }
 
     function createWheel(segmentsData = []) {
-        $('#dvNutTrungTam').html('<img onclick="turnOnModal()" style="width: 130px;" src="https://admin.xspin.vn/Upload/Images/NutQuay_Final.png" />')
 
-        var widthN = 295;
+        var widthN = 239;
         var innerWidth1 = 62;
         font_s = 15;
         segments = []
         for (var i = 0; i < segmentsData.length; i++) {
-            segments.push({
+            segments.push({	// The size of the wheel.
                 'fillStyle': segmentsData[i].fill_color,
                 'text': segmentsData[i].name,
                 'textFillStyle': segmentsData[i].text_color,
                 'textFontSize': font_s,
-                'strokeStyle': 'white',
+                'strokeStyle': 'transparent',
                 'probability': segmentsData[i].probability,
                 'textFontFamily': 'Arial',
                 'textFontWeight': 'bold',
-                'textAlignment': 'outer',
+                'textAlignment': 'center',
                 'textDirection': 'normal',
                 'isWin': segmentsData[i].is_win,
                 'size': segmentsData[i].size,
+                'soundTrigger': 'pin',
                 'startAngle': 0,
 
             })
@@ -227,6 +270,10 @@ window.onload = function () {
         modalForm.show()
     }
 
+    $('#btn-spin').click(() => {
+        turnOnModal()
+    })
+
     function spin() {
         if (isStartSpin === "True") {
             return;
@@ -243,9 +290,7 @@ window.onload = function () {
         const number_phone = $('#number_phone').val()
         const full_name = $('#full_name').val()
         const address = $('#address').val()
-        const facebook = $('#facebook').val()
-        console.log(number_phone, full_name, address, facebook)
-        if (number_phone === '' || full_name === '' || address === '' || facebook === '') {
+        if (number_phone === '' || full_name === '' || address === '') {
             Swal.fire({
                 title: 'Thông báo',
                 text: 'Bạn cần nhập đầy đủ thông tin',
@@ -258,16 +303,18 @@ window.onload = function () {
                 phone: number_phone,
                 full_name: full_name,
                 address: address,
-                facebook: facebook
             }
             $('#phone_text').text(user.phone)
             $('#full_name_text').text(user.full_name)
             $('#address_text').text(user.address)
-            $('#facebook_text').text(user.facebook)
             modalForm.hide()
             modalDetail.show()
         }
     }
+
+    $('#sendInfo').click(() => {
+        showInfo()
+    })
 
     function startSpin() {
         $.ajax({
@@ -290,6 +337,10 @@ window.onload = function () {
             }
         })
     }
+
+    $('#startSpin').click(() => {
+        startSpin()
+    })
 
     function resetWheel() {
         theWheel.stopAnimation(false);  // Stop the animation, false as param so does not call callback function.

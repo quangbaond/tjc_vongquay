@@ -14,7 +14,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [\App\Http\Controllers\HomeController::class, 'index'])->name('tjc.home')->middleware('localization');
-Route::get('/event/{slug}', [\App\Http\Controllers\HomeController::class, 'event'])->name('tjc.event')->middleware('localization');
-
-// change language
 Route::get('/language/{language}', [\App\Http\Controllers\LanguageController::class, 'LanguageSwitch'])->name('tjc.language');
+Route::get('/{slug}', [\App\Http\Controllers\HomeController::class, 'event'])->name('tjc.event')->middleware('localization');

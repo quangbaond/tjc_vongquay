@@ -12,13 +12,10 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link href="https://cdn.datatables.net/v/bs5/dt-1.13.8/datatables.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
-    <link rel="stylesheet" href="{{ asset('css/datatable.css') }}">
 </head>
 
-<body style="background-image: url( 'storage/{{ $event->setting->background_pc }}');
+<body style="background-image: url( 'storage/{{ $event->setting->background_mobile }}');
 background-size: cover;
 background-repeat: no-repeat;">
     <div class="lds-spinner">
@@ -40,12 +37,14 @@ background-repeat: no-repeat;">
             <div class="col-12 col-md-6">
                 <div id="vqRight" class="mt-5" style="position: relative; ">
                     <div id="canvasCt">
-                        <div id="quayBtn" class="noSelectedColor"
+                        <div id="quayBtn" class="noSelectedColor" onclick="startSpin()"
                             style="background-position: center; background-size: cover">
                             <img id="idAnhNutQuay"
+                                style="width: 100%; position: absolute; top: -5%; left: 0; max-width: 100px; right: 0; margin: auto;"
                                 src="https://admin.xspin.vn/upload/images/vqmm_cauhinhmacdinh_avq_10.png?v=712382351517" />
                         </div>
-                        <canvas id="canvas" width="500" height="500" style="background-image: url('storage/{{ $event->setting->background_wheel }}');
+                        <canvas id="canvas" width="620" height="620" data-responsiveMinWidth="180"
+                            data-responsiveScaleHeight="true" data-responsiveMargin="50" style="background-image: url('https://vqmm.xspin.vn/Images/13459-vien%20trang.png');
                             background-size: contain; background-repeat: no-repeat; background-position: center">
                             <p style="color: white; text-align: center">Rất
                                 tiết, trình duyệt của bạn không hỗ trợ
@@ -53,36 +52,12 @@ background-repeat: no-repeat;">
                                 Hãy thử trình duyệt khác ví dụ như Chrome
                                 hoặc Firefox.</p>
                         </canvas>
-                        <div id="dvNutTrungTam">
-                            <img id="btn-spin" src="{{ env('APP_URL') }}/storage/{{ $event->setting->background_spin }}"
-                                alt="quay">
+                        <div id="dvNutTrungTam" style="cursor:pointer; position: absolute; top: 39%; left: 38% "></div>
+                        <div id="border_outside"
+                            style="background-image: url('https://vqmm.xspin.vn/Images/13459-vien%20trang.png'); background-size: contain;">
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-12 col-md-6 mt-5">
-                <div class="card">
-                    <div class="card-header">
-                        <strong>Danh sách trúng thưởng</strong>
-                    </div>
-                    <div class="card-body">
-                        <table id="dataTable" class="table table-striped" style="width:100%">
-                            <thead>
-                                <tr>
-                                    {{-- <th>Tên</th> --}}
-                                    <th>Số điện thoại</th>
-                                    <th>Giải thưởng</th>
-                                    <th>Thời gian</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-
-
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
             </div>
         </div>
     </div>
@@ -99,7 +74,7 @@ background-repeat: no-repeat;">
                     <p class="border-bottom">Địa chỉ: <span id="address_text"></span></p>
                 </div>
                 <div class=" d-flex justify-content-end">
-                    <button id="startSpin" type="button" class="btn btn-danger m-2">Quay</button>
+                    <button type="button" class="btn btn-danger m-2" onclick="startSpin()">Quay</button>
                 </div>
             </div>
 
@@ -124,6 +99,11 @@ background-repeat: no-repeat;">
                         <input class="form-control" id="full_name" placeholder="Họ và tên">
                     </div>
                     <div class="mb-3">
+                        <label for="facebook" class="form-label">Đường dẫn
+                            facebook cá nhân</label>
+                        <input class="form-control" id="facebook" placeholder="https://facebook.com/quangbaond">
+                    </div>
+                    <div class="mb-3">
                         <label for="address" class="form-label">Địa
                             chỉ</label>
                         <textarea class="form-control" id="address" rows="3"></textarea>
@@ -132,17 +112,14 @@ background-repeat: no-repeat;">
                 <div class="modal-footer">
                     <div class="d-flex justify-content-end w-100">
                         <button type="button" class="btn btn-danger mx-1" data-bs-dismiss="modal">Đóng</button>
-                        <button type="button" id="sendInfo" class="btn btn-success">Xác nhận</button>
+                        <button type="button" onclick="showInfo()" class="btn btn-success">Xác nhận</button>
                     </div>
                 </div>
 
             </div>
         </div>
     </div>
-    <script>
-        const segmentsData = {!! json_encode($event->prizes) !!};
-        const event = {!! json_encode($event) !!};
-    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
         integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous">
     </script>
@@ -151,17 +128,11 @@ background-repeat: no-repeat;">
     </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-
-    <script src="{{ asset('js/jquery.min.js') }}"></script>
-    <script src="{{ asset('Plugins/Wheel/Winwheel.js') }}"></script>
-    <script src="{{ asset('Plugins/TweenMax/TweenMax.js') }}"></script>
-    <script src="{{ asset('js/config.js') }}"></script>
-    <script src="https://cdn.datatables.net/v/bs5/dt-1.13.8/datatables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/moment.min.js"
-        integrity="sha512-Dz4zO7p6MrF+VcOD6PUbA08hK1rv0hDv/wGuxSUjImaUYxRyK2gLC6eQWVqyDN9IM1X/kUA8zkykJS/gEVOd3w=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="{{ asset('js/js.js') }}"></script>
+    <script src="{{asset('js/jquery.min.js')}}"></script>
+    <script src="{{asset('Plugins/Wheel/Winwheel.js')}}"></script>
+    <script src="{{asset('Plugins/TweenMax/TweenMax.js')}}"></script>
+    <script src="{{asset('js/config.js')}}"></script>
+    <script src="{{asset('js/js.js')}}"></script>
 </body>
 
 </html>
