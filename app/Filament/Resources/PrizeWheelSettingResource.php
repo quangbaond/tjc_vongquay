@@ -39,6 +39,9 @@ class PrizeWheelSettingResource extends Resource
                         Forms\Components\FileUpload::make('background_spin')
                             ->label('Hình nền cho nút quay')
                             ->required(),
+                        Forms\Components\RichEditor::make('rule_title')
+                            ->label('Nội dung quy định')
+                            ->required(),
                         Forms\Components\Select::make('event_id')
                             ->relationship('event', 'name')
                             ->label('Sự kiện')

@@ -40,7 +40,5 @@ class HomeController extends Controller
         } else {
             return view('event', compact('event'));
         }
-
-        // return view('event', compact('event'));
     }
 }

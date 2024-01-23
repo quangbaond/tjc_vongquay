@@ -263,23 +263,26 @@ abstract class BaseRepository
         return $query->where($where)->get($columns);
     }
 
-    public function count(array $where): int
+    public function count(array|null $where = null): int
     {
         $query = $this->model->query();
+
+        if($where) return $query->where($where)->count();
         return $query->where($where)->count();
     }
 
     /**
      * @return Model
      */
-    public function first(): Model
+    public function first($column = null): Model
     {
+        if($column) return $this->model->where($column)->firstOrFail();
         return $this->model->query()->first();
     }
 
     public function findBySlug(string $slug, array|string $with): Model
     {
-        return $this->model->query()->where('slug', $slug)
+        return $this->model->query()->where(['slug'=> $slug, 'is_active' => true])
             ->with($with)
             ->firstOrFail();
     }

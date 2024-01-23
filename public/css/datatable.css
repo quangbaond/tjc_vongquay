@@ -13,6 +13,9 @@
 :root.dark {
     --dt-html-background: rgb(33, 37, 41);
 }
+table.dataTable {
+    margin-top: 10px !important;
+}
 
 table.dataTable td.dt-control {
     text-align: center;
@@ -319,7 +322,7 @@ table.dataTable tbody td.dt-body-nowrap {
  */
 table.dataTable {
     width: 100%;
-    margin: 0 auto;
+    margin: 10px auto;
     clear: both;
     border-collapse: separate;
     border-spacing: 0;
@@ -589,6 +592,7 @@ table.dataTable td {
 
 .dataTables_wrapper .dataTables_length {
     float: left;
+    margin-bottom: 0.5em;
 }
 
 .dataTables_wrapper .dataTables_length select {
@@ -603,6 +607,7 @@ table.dataTable td {
 .dataTables_wrapper .dataTables_filter {
     float: right;
     text-align: right;
+    margin-bottom: 1em;
 }
 
 .dataTables_wrapper .dataTables_filter input {
@@ -855,4 +860,12 @@ html.dark .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
 
 html.dark .dataTables_wrapper .dataTables_paginate .paginate_button:active {
     background: #3a3a3a;
+}
+
+th{
+    border-bottom-color: #ccc !important;
+}
+
+div#dataTable_paginate{
+    white-space: wrap;
 }

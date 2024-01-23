@@ -4,6 +4,7 @@ window.onload = function () {
     var datatable = $('#dataTable').DataTable({
         "processing": true,
         "serverSide": true,
+
         lengthMenu: [
             [5, 10, 25, 50, 100, 200, 500, 1000, -1],
             [5, 10, 25, 50, 100, 200, 500, 1000, "Tất cả"]
@@ -45,6 +46,17 @@ window.onload = function () {
         },
         pageLength: 5,
         searching: true,
+        responsive: true,
+        // responsive pagination
+        responsive: {
+            details: {
+                type: 'column',
+                target: 'tr'
+            }
+        },
+        // order: [[3, 'desc']],
+
+
 
         columns: [
             {
@@ -216,32 +228,21 @@ window.onload = function () {
 
     function createWheel(segmentsData = []) {
 
-        var widthN = 235;
-        var innerWidth1 = 42;
-        font_s = 13;
-        // responsive
-
+        var widthN = 140;
+        var innerWidth1 = 25;
+        font_s = 12;
         segments = []
         for (var i = 0; i < segmentsData.length; i++) {
-            if (segmentsData[i].name.length > 20) {
-                segmentsData[i].name = segmentsData[i].name.slice(0, 20) + '\n' + segmentsData[i].name.slice(20)
-            }
             segments.push({	// The size of the wheel.
                 'fillStyle': segmentsData[i].fill_color,
                 'text': segmentsData[i].name,
                 'textFillStyle': segmentsData[i].text_color,
-                'textFontSize': segmentsData[i].name.length < 30 ? font_s : 13,
-                'strokeStyle': '#ccc',
+                'textFontSize': font_s,
+                'strokeStyle': 'purple',
                 'probability': segmentsData[i].probability,
                 'textFontFamily': 'Arial',
                 'textFontWeight': 'bold',
-                'textAlignment': 'outer',
-                'wrapText': true,
-                // wrap text
-                'textMargin': 0,
-                'textOrientation': 'horizontal',
-
-                'textBaseline': 'middle',
+                'textAlignment': 'center',
                 'textDirection': 'normal',
                 'isWin': segmentsData[i].is_win,
                 'size': segmentsData[i].size,
@@ -259,7 +260,6 @@ window.onload = function () {
             'textAlignment': 'outer',    // Align text to outside of wheel.
             'numSegments': segments.length,         // Specify number of segments.
             'segments': segments,
-
             'animation':           // Specify the animation to use.
             {
                 'type': 'spinToStop',
@@ -268,7 +268,7 @@ window.onload = function () {
                 'callbackSound': playSound,
                 'callbackFinished': alertPrize
             },
-            'drawMode': 'code',
+            //'drawMode': 'image',
             'lineWidth': 0,
             'responsive': true
         });
@@ -287,36 +287,11 @@ window.onload = function () {
             return;
         }
         isStartSpin = "True";
+        console.log(isStartSpin)
         theWheel.animation.spins = 5;
         theWheel.rotationAngle = 0;
-        calculateProbability()
-
         theWheel.draw();
         theWheel.startAnimation();
-    }
-
-    // Tính toán xác suất trúng thưởng
-    function calculateProbability() {
-        var segments = theWheel.segments;
-        console.log(segments);
-        var total = 0;
-        for (var i = 0; i < segments.length; i++) {
-            if (segments[i]) {
-                total += segments[i].probability;
-            }
-        }
-        var stopAt = Math.random() * total;
-        var current = 0;
-        for (var i = 0; i < segments.length; i++) {
-            if (!segments[i]) {
-                continue;
-            }
-            current += segments[i].probability;
-            if (current > stopAt) {
-                theWheel.animation.stopAngle = theWheel.getRandomForSegment(i);
-                break;
-            }
-        }
     }
 
     function showInfo() {

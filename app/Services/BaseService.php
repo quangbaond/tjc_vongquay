@@ -134,4 +134,9 @@ class BaseService
     {
         return $this->repository->search($requester, $columnCanSearchKeyword);
     }
+
+    public function count(array|null $where = null): int
+    {
+        return $this->repository->count($where);
+    }
 }

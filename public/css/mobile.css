@@ -1,0 +1,12 @@
+#vqRight {
+    position: relative;
+    width: 300px;
+    height: 300px;
+}
+#btn-spin {
+    width: 70px;
+}
+
+#quayBtn img {
+    max-width: 100px;
+}

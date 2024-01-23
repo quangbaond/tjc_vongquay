@@ -104,23 +104,22 @@ class PrizeWheelController extends ApiController
     public function getUser(Request $request)
     {
         if ($request->has('event_id') && $request->get('event_id')) {
-            $user = $this->prizeWheelUserService->search([
+            $query = $this->prizeWheelUserService->search([
                 'keyword' => $request->has('search') && $request->get('search')['value'] ? $request->get('search')['value'] : null,
                 'event_id' => $request->get('event_id'),
-            ], ['phone'])->get();
+                'orderByColumn' => 'created_at',
+                'orderBy' => 'desc',
+            ], ['phone']);
+            $pageNumber = ($request->start / $request->length) + 1;
+            $pageLength = $request->length;
+            $skip       = ($pageNumber - 1) * $pageLength;
 
-            // if($request->has('search') && $request->get('search')['value']) {
-            //     $user = $this->prizeWheelUserService->search([
-            //         'keyword' => $request->has('search') && $request->get('search')['value'] ? $request->get('search')['value'] : null,
-            //         'event_id' => $request->get('event_id'),
-            //     ], ['phone']);
-            // }
+            $recordsFiltered = $recordsTotal = $query->count();
 
-            return $this->sendSuccess(
-                $user,
-                'User retrieved successfully.',
-                Response::HTTP_OK
-            );
+            $users = $query->skip($skip)->take($pageLength)->get();
+
+            return response()->json(["draw" => $request->draw, "recordsTotal" => $recordsTotal, "recordsFiltered" => $recordsFiltered, 'data' => $users], 200);
+
         }
 
         $user = $this->prizeWheelUserService->all();
@@ -129,6 +128,34 @@ class PrizeWheelController extends ApiController
             $user,
             'User retrieved successfully.',
             Response::HTTP_OK
+        );
+    }
+
+    // tính tỉ lệ trúng thưởng của từng giải
+
+    /**
+     * @param $event_id
+     * @return JsonResponse
+     */
+    public function getPrize($event_id): JsonResponse
+    {
+        $prizes = $this->prizeWheelService->first(['event_id' => $event_id]);
+
+        // tính tỉ lệ trúng thưởng của từng giải
+        // tổng số lượt quay
+        $total = $this->prizeWheelUserService->count(['event_id' => $event_id]);
+        $prizes->map(function ($prize) use ($total) {
+            $prize->probability = round($prize->probability / $total * 100, 2);
+            return $prize;
+        });
+
+       // trả về giải thưởng có tỉ lệ trúng thấp nhất
+        $prize = $prizes->sortBy('probability')->first();
+
+        return $this->sendSuccess(
+            $prize,
+            $prize ? 'Prize retrieved successfully.' : 'Prize not found.',
+            $prize ? Response::HTTP_OK : Response::HTTP_NOT_FOUND
         );
     }
 }

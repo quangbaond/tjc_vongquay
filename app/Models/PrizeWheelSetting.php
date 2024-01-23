@@ -16,7 +16,8 @@ class PrizeWheelSetting extends Model
         'background_mobile',
         'background_wheel',
         'event_id',
-        'background_spin'
+        'background_spin',
+        'rule_title',
     ];
 
 

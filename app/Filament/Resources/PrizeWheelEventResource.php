@@ -38,6 +38,9 @@ class PrizeWheelEventResource extends Resource
                             ->label('Tên sự kiện'),
                         Forms\Components\Textarea::make('description')
                             ->label('Mô tả'),
+                        Forms\Components\Toggle::make('is_active')
+                            ->label('Trạng thái')
+                            ->default(true)
                     ]),
             ]);
     }
@@ -47,15 +50,19 @@ class PrizeWheelEventResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->label('Tên sự kiện')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('description')
+                Tables\Columns\BooleanColumn::make('is_active')
+                    ->label('Trạng thái')
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label('Ngày tạo')
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->label('Ngày cập nhật')
                     ->searchable()
                     ->sortable(),
             ])

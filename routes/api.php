@@ -23,4 +23,5 @@ Route::prefix('v1')->group(function () {
     Route::get('prize-check-user/{phone}', [\App\Http\Controllers\Api\V1\PrizeWheelController::class, 'checkUser']);
     Route::get('prize-event/{slug}', [\App\Http\Controllers\Api\V1\PrizeWheelController::class, 'getEvent']);
     Route::get('prize-user', [\App\Http\Controllers\Api\V1\PrizeWheelController::class, 'getUser']);
+    Route::get('prize/{event_id}', [\App\Http\Controllers\Api\V1\PrizeWheelController::class, 'getPrize']);
 });

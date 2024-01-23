@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('background_wheel');
             $table->string('background_spin');
             $table->boolean('auto_messenger')->default(true)->nullable();
+            $table->longText('rule_title')->nullable();
             $table->timestamps();
         });
     }
