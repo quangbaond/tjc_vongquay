@@ -35,7 +35,7 @@
                     {{-- end div card header --}}
                     {{-- div card body --}}
                     @if($events->count() == 0)
-                    Không tìm thấy sự kiện nào
+                    <p class="p-3">Không tìm thấy sự kiện nào</p>
                     @else
                     <div class="card-body">
                         {{-- div table --}}
