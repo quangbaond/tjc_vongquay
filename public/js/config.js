@@ -1,1 +1,1 @@
-const API_URL = 'http://localhost/api/v1';
+const API_URL = 'https://vongquaymayman.tjc.vn/api/v1';
